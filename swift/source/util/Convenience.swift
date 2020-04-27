@@ -96,12 +96,14 @@ extension Array where Element==ColumnIndexConvertible {
 
 extension Array where Element==PropertyConvertible {
     func asCodingTableKeys() -> [CodingTableKeyBase] {
-        return map { $0.codingTableKey }
+        return reduce(into: [CodingTableKeyBase]()) { (result, element) in
+            result.append(element.codingTableKey)
+        }
     }
 }
 
 extension Array {
-    mutating func expand(toNewSize newSize: IndexDistance, fillWith value: Iterator.Element) {
+    mutating func expand(toNewSize newSize: Int, fillWith value: Iterator.Element) {
         if count < newSize {
             append(contentsOf: repeatElement(value, count: count.distance(to: newSize)))
         }
@@ -109,7 +111,7 @@ extension Array {
 }
 
 extension Array where Iterator.Element: FixedWidthInteger {
-    mutating func expand(toNewSize newSize: IndexDistance) {
+    mutating func expand(toNewSize newSize: Int) {
         expand(toNewSize: newSize, fillWith: 0)
     }
 }

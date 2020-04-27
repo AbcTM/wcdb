@@ -22,3 +22,4 @@ import Foundation
 
 typealias SQLite3 = OpaquePointer
 typealias SQLite3Statement = OpaquePointer
+typealias SQLite3Value = OpaquePointer

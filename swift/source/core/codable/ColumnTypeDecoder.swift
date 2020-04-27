@@ -45,11 +45,11 @@ final class ColumnTypeDecoder: Decoder {
             private let size: Int
             init<T>(of type: T.Type = T.self) {
                 size = MemoryLayout<T>.size
-                pointer = UnsafeMutableRawPointer.allocate(bytes: size, alignedTo: size)
+                pointer = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 1)
                 memset(pointer, 0, size)
             }
             func deallocate() {
-                pointer.deallocate(bytes: size, alignedTo: size)
+                pointer.deallocate()
             }
             func getPointee<T>(of type: T.Type = T.self) -> T {
                 return pointer.assumingMemoryBound(to: type).pointee
@@ -150,7 +150,7 @@ final class ColumnTypeDecoder: Decoder {
 
         func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
             // `type` must conform to ColumnDecodableBase protocol
-            let columnDecodableType = type as! ColumnDecodableBase.Type
+            let columnDecodableType = type as! ColumnDecodable.Type
             decoder.results[key.stringValue] = columnDecodableType.columnType
 
             let sizedPointer = SizedPointer(of: T.self)
@@ -167,7 +167,7 @@ final class ColumnTypeDecoder: Decoder {
         }
 
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
-                                        forKey key: Key)
+                                                 forKey key: Key)
             throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
             fatalError("It should not be called. If you think it's a bug, please report an issue to us.")
         }

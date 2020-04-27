@@ -23,11 +23,7 @@
 #include <errno.h>
 #include <map>
 #ifdef WCDB_BUILTIN_SQLCIPHER
-#ifdef WCDB_COCOAPODS
-#include "sqlite3.h"
-#else //WCDB_COCOAPODS
-#include <sqlcipher.swift/sqlite3.h>
-#endif //WCDB_COCOAPODS
+#include <sqlcipher/sqlite3.h>
 #else  //WCDB_BUILTIN_SQLCIPHER
 #include <sqlite3.h>
 #endif //WCDB_BUILTIN_SQLCIPHER
@@ -180,6 +176,9 @@ static int master_onParseColumn(sqliterk *rk,
     const char *sql = sqliterk_column_text(column, 4);
     sqliterk_type type;
 
+    if (!typestr || !name || !sql)
+        return SQLITERK_OK;
+        
     if (strcmp(typestr, "table") == 0)
         type = sqliterk_type_table;
     else if (strcmp(typestr, "index") == 0)

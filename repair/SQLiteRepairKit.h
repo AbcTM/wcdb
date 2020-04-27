@@ -49,12 +49,13 @@ int sqliterk_register_notify(sqliterk *rk, sqliterk_notify notify);
 typedef struct sqliterk_cipher_conf {
     const void *key;
     int key_len;
-    const char *cipher_name;
     int page_size;
     int kdf_iter;
     int use_hmac;
     const unsigned char *kdf_salt;
 } sqliterk_cipher_conf;
+    
+void sqliterk_cipher_conf_set_key(sqliterk_cipher_conf *conf, const void* key, int key_len);
 
 typedef struct sqlite3 sqlite3;
 typedef struct sqliterk_master_info sqliterk_master_info;
